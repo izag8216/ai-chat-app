@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import supabase from '../lib/supabase'
 
 export default function Chat() {
@@ -22,9 +22,9 @@ export default function Chat() {
     if (user) {
       fetchOrCreateChat()
     }
-  }, [user])
+  }, [user, fetchOrCreateChat])
 
-  const fetchOrCreateChat = async () => {
+  const fetchOrCreateChat = useCallback(async () => {
     try {
       // ユーザーの最新のチャットを取得
       let { data, error } = await supabase
@@ -53,7 +53,7 @@ export default function Chat() {
     } catch (error) {
       console.error('Error fetching or creating chat:', error)
     }
-  }
+  }, [user])
 
   const fetchMessages = async (chatId) => {
     const { data, error } = await supabase
